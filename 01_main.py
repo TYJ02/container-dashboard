@@ -7,53 +7,44 @@ st.set_page_config(page_title="Dashboard",layout="wide")
 st.title("Dashboard")
 st.sidebar.success("Select a page above.")
 
+# load our dataframe
+df = pd.read_csv("container.csv")
+
 # column
 col1, col2  = st.columns(2)
 
 with col1:
     st.header("container ID")
     st.write("10101")
+    option = st.selectbox(label="container id", options=df.iloc[:,2])
 
 with col2: 
     st.header("container image")
-    st.image("image.png")
-    if st.button("view damage"):
-        st.switch_page("pages/02_new_page.py")
+    st.write(option)
+    st.image(f"{option}.jpg")
+        #st.switch_page("pages/02_new_page.py")
 
+
+if st.button("view damage"):
+    img = cv.imread(f"{option}.jpg")
+
+    image = img[100:1000, 100:1000]
+
+    # set channel to BGR for opencv
+    st.image(image, channels="BGR", width=500)
 st.write("hello world")
 
 st.markdown("# Damages")
 
-col1, col2  = st.columns(2)
-
-with col1:
-    st.header("container ID")
-    # coordinates
-    st.write("10101")
-
-with col2: 
-    st.header("container image")
-    # coordinates
-    #coor = [500:1000, 500:1000]
-    img = cv.imread("image.png")
-    img = img[500:1000, 500:1000]
-    st.image("image.png")
-
 
 # insert image
-st.image("image.png")
 
 # insert table
-df = pd.read_csv("container.csv")
-st.dataframe(data=df)
+st.dataframe(data=df, width=10000)
 
 # insert filter
 
 # interactive image - click to zoom
-
-# Function to handle page navigation
-def navigate():
-    st.navigation(new_page)
 
 
 

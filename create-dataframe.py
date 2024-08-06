@@ -2,7 +2,9 @@ import pandas as pd
 
 # list = [image, id, damage count, type 1, type 2, rating]
 
-item1 = [["image.png", 10101, 2, 1, 1, 84]]
+item1 = [["image.png", 10101, 2, 1, 1, 84],
+         ["image2.jpg", 10102, 2, 1, 1, 60]
+         ]
 
 column_names = ['image', 'id', 'count', 'axis', 'concave', 'rating']
 

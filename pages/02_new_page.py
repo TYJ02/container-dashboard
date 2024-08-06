@@ -3,7 +3,7 @@ import cv2 as cv
 
 st.title("new page")
 st.write("hello")
-img = cv.imread("image.png")
+img = cv.imread("10101.jpg")
 
 image = img[100:1000, 100:1000]
 

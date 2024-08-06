@@ -27,7 +27,6 @@ st.markdown("hello **from** *python*")
 st.write("hello")
 
 # insert image
-st.image("image.png")
 
 # insert table
 df = pd.read_csv("container.csv")
