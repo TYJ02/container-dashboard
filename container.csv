@@ -1,3 +1,3 @@
-,image,id,count,axis,concave,rating
-0,image.png,10101,2,1,1,84
-1,image2.jpg,10102,2,1,1,60
+,timestamp,image,id,count,axis,concave,rating
+0,20240806,10101.jpg,10101,2,1,1,84
+1,20240806,10102.jpg,10102,2,1,1,60

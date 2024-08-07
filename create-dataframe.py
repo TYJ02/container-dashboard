@@ -2,11 +2,11 @@ import pandas as pd
 
 # list = [image, id, damage count, type 1, type 2, rating]
 
-item1 = [["image.png", 10101, 2, 1, 1, 84],
-         ["image2.jpg", 10102, 2, 1, 1, 60]
+item1 = [["20240806", "10101.jpg", 10101, 2, 1, 1, 84],
+         ["20240806","10102.jpg", 10102, 2, 1, 1, 60]
          ]
 
-column_names = ['image', 'id', 'count', 'axis', 'concave', 'rating']
+column_names = ["timestamp", 'image', 'id', 'count', 'axis', 'concave', 'rating']
 
 data = pd.DataFrame(data=item1, columns = column_names)
 
