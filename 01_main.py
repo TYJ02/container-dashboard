@@ -35,7 +35,12 @@ def damage_count(option):
 def damage_type(option):
     damages = df[["axis","concave","dentado","perforation"]][df["id"] == option].iloc[0]
     st.header("damage type")
-    st.write(damages)
+    col3, col4, col5, col6 = st.columns(4)
+    label = ["axis", "concave", "dentado", "perforation"]
+    col3.metric(label=label[0], value = damages[0])
+    col4.metric(label=label[1], value = damages[1])
+    col5.metric(label=label[2], value = damages[2])
+    col6.metric(label=label[3], value = damages[3])
 
     # make each damage type text clickable and then show crop image when clicked
 
