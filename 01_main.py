@@ -13,25 +13,31 @@ df = pd.read_csv("container.csv")
 
 def container_id():
     st.header("container ID")
-    option = st.selectbox(label="container id", options=df.iloc[:, 3])
+    option = st.selectbox(label="container id", options=df.iloc[:, 2])
     time = df["timestamp"][df["id"] == option].iloc[0]
+    path = df["image"][df["id"] == option].iloc[0]
     st.markdown(f" ### timestamp \n this is {time}")
-    return option
+    return option, path
 
-def container_image(option):
+def container_image(option, path):
     st.header("container image")
     st.write(option)
-    st.image(f"{option}.jpg", width= 800)
+    st.image(path, width= 800)
+
+#def rating():
+
+#def damages():
+    # make each damage type text clickable and then show crop image when clicked
 
 # column
 col1, col2  = st.columns(2)
 
 with col1:
-    option = container_id()
+    option, path = container_id()
     
 
 with col2:
-    container_image(option)
+    container_image(option, path)
 
 if st.button("view damage"):
     img = cv.imread(f"{option}.jpg")

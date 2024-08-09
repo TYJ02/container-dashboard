@@ -10,6 +10,6 @@ column_names = ["timestamp", 'image', 'id', 'count', 'axis', 'concave', 'rating'
 
 data = pd.DataFrame(data=item1, columns = column_names)
 
-data.to_csv("container.csv")
+data.to_csv("container.csv", index= False)
             
 print(data)
