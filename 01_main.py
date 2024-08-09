@@ -24,9 +24,19 @@ def container_image(option, path):
     st.write(option)
     st.image(path, width= 800)
 
+
 #def rating():
 
-#def damages():
+def damage_count(option):
+    count = df["count"][df["id"] == option].iloc[0]
+    st.header("damage count")
+    st.write(count)
+
+def damage_type(option):
+    damages = df[["axis","concave","dentado","perforation"]][df["id"] == option].iloc[0]
+    st.header("damage type")
+    st.write(damages)
+
     # make each damage type text clickable and then show crop image when clicked
 
 # column
@@ -34,6 +44,9 @@ col1, col2  = st.columns(2)
 
 with col1:
     option, path = container_id()
+    damage_count(option)
+    damage_type(option)
+    
     
 
 with col2:
