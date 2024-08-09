@@ -10,11 +10,24 @@ st.sidebar.success("Select a page above.")
 # load our dataframe
 df = pd.read_csv("container.csv")
 
-
 def container_id():
+    global option
+    options = list(df.iloc[:, 2])
     st.header("container ID")
-    #option = st.selectbox(label="container id", options=df.iloc[:, 2])
-    option = st.select_slider(label="container id", options=df.iloc[:, 2])
+    if "selected_option" not in st.session_state:
+        st.session_state.selected_option = options[0]  # Default to the first option
+    option = st.selectbox(label="container id", options=df.iloc[:, 2], index = options.index(st.session_state.selected_option))
+    if st.button("prev"):
+        current = options.index(option)
+        option = options[current - 1]
+        st.session_state.selected_option = option
+    if st.button("next"):
+        current = options.index(option)
+        option = options[current + 1]
+        st.session_state.selected_option = option
+    #option = st.select_slider(label="container id", options=df.iloc[:, 2])
+    st.metric(label="current", value = option)
+    print(option)
     time = df["timestamp"][df["id"] == option].iloc[0]
     path = df["image"][df["id"] == option].iloc[0]
     st.markdown(f" ### timestamp \n this is {time}")
