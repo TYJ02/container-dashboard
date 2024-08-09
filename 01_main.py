@@ -13,7 +13,8 @@ df = pd.read_csv("container.csv")
 
 def container_id():
     st.header("container ID")
-    option = st.selectbox(label="container id", options=df.iloc[:, 2])
+    #option = st.selectbox(label="container id", options=df.iloc[:, 2])
+    option = st.select_slider(label="container id", options=df.iloc[:, 2])
     time = df["timestamp"][df["id"] == option].iloc[0]
     path = df["image"][df["id"] == option].iloc[0]
     st.markdown(f" ### timestamp \n this is {time}")
