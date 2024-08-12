@@ -1,4 +1,4 @@
-timestamp,image,id,count,axis,concave,dentado,perforation,rating
-20240806,10101.jpg,10101,2,1,1,0,0,84
-20240806,10102.jpg,10102,2,1,1,0,0,60
-20240808,truck.jpg,truck,0,0,0,0,0,90
+timestamp,image,id,count,axis,concave,dentado,perforation,rating,location
+20240806,10101.jpg,10101,2,1,1,0,0,84,[[500,500,400,100], [100,100,100,100]]
+20240806,10102.jpg,10102,2,1,1,0,0,60,[[x,y,w,h], [x,y,w,h]]
+20240808,truck.jpg,truck,0,0,0,0,0,90,[[x,y,w,h], [x,y,w,h]]

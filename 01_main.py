@@ -73,7 +73,8 @@ with col2:
 
 if st.button("view damage"):
     img = cv.imread(f"{option}.jpg")
-
+    coor = df[["location"]][df["id"] == option].iloc[0]
+    print(coor)
     image1 = img[100:500, 100:500]
     image2 = img[500:1000, 500:1000]
     image3 = img[100:1000, 100:1000]
