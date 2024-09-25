@@ -1,6 +1,7 @@
 import streamlit as st
 import cv2 as cv
 import pandas as pd
+import sqlite3
 
 st.set_page_config(page_title="Dashboard",layout="wide")
 
@@ -9,14 +10,31 @@ st.sidebar.success("Select a page above.")
 
 # load our dataframe
 df = pd.read_csv("container.csv")
+dm = pd.read_csv("damage.csv")
+
+# load sql database
+con = sqlite3.connect('database.db')
+cur = con.cursor()
+res = cur.execute("SELECT * FROM Containers")
+container = res.fetchall()
+res = cur.execute("SELECT * FROM Damages")
+damage = res.fetchall()
+res = cur.execute("SELECT * FROM Inspection")
+time = res.fetchall()
+damagedf = pd.DataFrame(damage, columns =["damage_id", "container_id", "timestamp", "damage_type", "location"])
+timedf = pd.DataFrame(time, columns =["inspect_id", "container_id", "timestamp", "img_path"])
+
+option = ''
+path = ''
+
 
 def container_id():
     global option
-    options = list(df.iloc[:, 2])
-    st.header("container ID")
+    options = [item[0] for item in container]
+    print(options)
     if "selected_option" not in st.session_state:
         st.session_state.selected_option = options[0]  # Default to the first option
-    option = st.selectbox(label="container id", options=df.iloc[:, 2], index = options.index(st.session_state.selected_option))
+    option = st.selectbox(label="container id", options=options, index = options.index(st.session_state.selected_option))
     if st.button("prev"):
         current = options.index(option)
         option = options[current - 1]
@@ -26,18 +44,31 @@ def container_id():
         option = options[current + 1]
         st.session_state.selected_option = option
     #option = st.select_slider(label="container id", options=df.iloc[:, 2])
-    st.metric(label="current", value = option)
     print(option)
-    time = df["timestamp"][df["id"] == option].iloc[0]
-    path = df["image"][df["id"] == option].iloc[0]
-    st.markdown(f" ### timestamp \n this is {time}")
+    timestamp = timedf["timestamp"][timedf["container_id"] == option].iloc[0]
+    path = timedf["img_path"][timedf["container_id"] == option].iloc[0]
+    print(path)
     return option, path
+
 
 def container_image(option, path):
     st.header("container image")
     st.write(option)
-    st.image(path, width= 800)
+    try:
+        st.image(path, use_column_width=True)
+    except :
+        st.write("no image found")
 
+
+def inspect_date(option):
+    options = timedf["timestamp"][timedf["container_id"] == option].iloc[:]
+    print(options)
+    if "selected_option" not in st.session_state:
+        st.session_state.selected_option = options[0]  # Default to the first option
+    time = st.selectbox(label="timestamp", options=options, index=None, placeholder="select datetime") # index = options.index(st.session_state.selected_option
+    st.write(time)
+    return time
+    
 
 #def rating():
 
@@ -58,44 +89,70 @@ def damage_type(option):
 
     # make each damage type text clickable and then show crop image when clicked
 
+
+
 # column
 col1, col2  = st.columns(2)
 
 with col1:
     option, path = container_id()
-    damage_count(option)
-    damage_type(option)
-    
+    timestamp = inspect_date(option)
+    #damage_count(option)
+    #damage_type(option)
     
 
 with col2:
     container_image(option, path)
+    #st.metric(label="current", value = option)
+    #st.markdown(f" ### timestamp \n this is {timestamp}")
+
+
+
 
 if st.button("view damage"):
     img = cv.imread(f"{option}.jpg")
-    coor = df[["location"]][df["id"] == option].iloc[0]
+    print(dm["id"] == option)
+    coor = dm[["location"]][dm["id"] == option]['location']
     print(coor)
-    image1 = img[100:500, 100:500]
-    image2 = img[500:1000, 500:1000]
-    image3 = img[100:1000, 100:1000]
-    image_list = [image1, image2, image3]
+    image_list = []
+    for box in coor:
+        coor_list = box.split('-')
+        print(f'coordinates:  {coor_list}')
+        print(f'first coordinate: {coor_list[0]}')
+        x = int(coor_list[0])
+        y = int(coor_list[1])
+        w = int(coor_list[2])
+        h = int(coor_list[3])
+        print(x,y,w,h)
+        image = img[y-h:y+h, x-w:x+w]
+        image_list.append(image)
+        print(len(image_list))
 
     # set channel to BGR for opencv
-    for image in image_list:
-        st.image(image, channels="BGR", width=200)
+    columns = st.columns(len(image_list))
+    print(columns)
+    
+    for i,pic in enumerate(columns):
+        with pic:
+            st.image(image_list[i], channels="BGR", width=True)
 st.write("hello world")
 
 st.markdown("# Damages")
+st.write(f'{option} and {timestamp}')
 
+damage = damagedf[(damagedf['container_id']==option) & (damagedf['timestamp'] == timestamp)]
 
+st.dataframe(damage, use_container_width=True)
 # insert image
 
 # insert table
-st.dataframe(data=df, width=10000)
 
 # insert filter
 
 # interactive image - click to zoom
+st.markdown("# History")
+
+st.dataframe(damagedf[(damagedf['container_id']==option)] , use_container_width=True)
 
 
 
