@@ -8,10 +8,6 @@ st.set_page_config(page_title="Dashboard",layout="wide")
 st.title("Dashboard")
 st.sidebar.success("Select a page above.")
 
-# load our dataframe
-df = pd.read_csv("container.csv")
-dm = pd.read_csv("damage.csv")
-
 # load sql database
 con = sqlite3.connect('database.db')
 cur = con.cursor()
