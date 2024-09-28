@@ -130,11 +130,12 @@ def report(container_id, timestamp, df):
            
     damage_info = df.values.tolist()
     print(damage_info)
-
+    time = datetime.strptime(timestamp, '%Y%m%d%H%M%S')
+    time = time.strftime('%Y-%m-%d %H:%M:%S')
     pdf = PDF()
     pdf.set_title(title)
     pdf.set_author('Jules Verne')
-    pdf.print_chapter(1, 'A RUNAWAY REEF', container_id, '45G1', timestamp, 'B')
+    pdf.print_chapter(1, 'A RUNAWAY REEF', container_id, '45G1', time, 'B')
     pdf.damage_table(damage_info)
     #pdf.container_image(imgpath)
     pdf.output('report.pdf', 'F')
