@@ -83,9 +83,9 @@ class PDF(FPDF):
         # Populate the damage info table
         for i, damage in enumerate(damage_info):
             self.cell(30, 10, str(i), 0)
-            self.cell(30, 10, damage['comp'], 0)
-            self.cell(30, 10, damage['location'], 0)
-            self.cell(30, 10, damage['type'], 0)
+            self.cell(30, 10, 'PAA', 0)
+            self.cell(30, 10, damage[4], 0)
+            self.cell(30, 10, damage[3], 0)
             self.ln()
 
         # Add a line break
@@ -114,7 +114,8 @@ class PDF(FPDF):
         except Exception as e:
             print(f"Could not add image: {e}")
 
-def report():
+def report(container_id, timestamp, df):
+    '''
     container_iso = 'TCNU6215065'
     code = '45G1'
     timestamp = '20240809124530'
@@ -125,16 +126,19 @@ def report():
     damage_info = [
             {"type": "Dent", "location": "LT12", "comp": "PAA"},
             ]
+    '''
            
-
+    damage_info = df.values.tolist()
+    print(damage_info)
 
     pdf = PDF()
     pdf.set_title(title)
     pdf.set_author('Jules Verne')
-    pdf.print_chapter(1, 'A RUNAWAY REEF', container_iso, code, time, container_grade)
+    pdf.print_chapter(1, 'A RUNAWAY REEF', container_id, '45G1', timestamp, 'B')
     pdf.damage_table(damage_info)
-    pdf.container_image(imgpath)
+    #pdf.container_image(imgpath)
     pdf.output('report.pdf', 'F')
 
 if __name__ == "__main__":
-    report()
+    print('hi')
+    #report()

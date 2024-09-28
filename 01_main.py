@@ -76,9 +76,10 @@ def damage_history():
     print('hi')
 
 
-def export_pdf():
+def export_pdf(id, time):
     if st.button("export report"):
-        createpdf.report()
+        df = damagedf[(damagedf['container_id']==option) & (damagedf['timestamp'] == timestamp)]
+        createpdf.report(id, time, df)
         print('pdf exported')
 
 
@@ -104,7 +105,7 @@ col1, col2  = st.columns(2)
 with col1:
     option, path = container_id()
     timestamp = inspect_date(option)
-    export_pdf()
+    export_pdf(option, timestamp)
 
 
 with col2:
@@ -117,8 +118,15 @@ damage = damagedf[(damagedf['container_id']==option) & (damagedf['timestamp'] ==
 # interactive image - click to zoom
 st.markdown("# History")
 
-st.dataframe(damagedf[(damagedf['container_id']==option)] , use_container_width=True)
+def history(option):
+    time = timedf[['timestamp','inspect_id']][(timedf['container_id']==option)].set_index('timestamp') 
+    damage = damagedf[['timestamp','damage_id','location','damage_type']][(damagedf['container_id']==option)].set_index('timestamp')  
+    joint = time.join(damage, lsuffix='_inspect', rsuffix='_dmg')
+    #st.dataframe(time , use_container_width=True)
+    #st.dataframe(damage , use_container_width=True)
+    st.dataframe(joint , use_container_width=True)
 
+history(option)
 
 
 
