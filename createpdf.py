@@ -114,24 +114,27 @@ class PDF(FPDF):
         except Exception as e:
             print(f"Could not add image: {e}")
 
-container_iso = 'TCNU6215065'
-code = '45G1'
-timestamp = '20240809124530'
-time = datetime.strptime(timestamp, '%Y%m%d%H%M%S')
-time = time.date()
-imgpath = '../20240902230430.png'
-container_grade = 'B'
-#damage = 
-damage_info = [
-        {"type": "Dent", "location": "LT12", "comp": "PAA"},
-        ]
-       
+def report():
+    container_iso = 'TCNU6215065'
+    code = '45G1'
+    timestamp = '20240809124530'
+    time = datetime.strptime(timestamp, '%Y%m%d%H%M%S')
+    time = time.date()
+    imgpath = '../20240902230430.png'
+    container_grade = 'B'
+    damage_info = [
+            {"type": "Dent", "location": "LT12", "comp": "PAA"},
+            ]
+           
 
 
-pdf = PDF()
-pdf.set_title(title)
-pdf.set_author('Jules Verne')
-pdf.print_chapter(1, 'A RUNAWAY REEF', container_iso, code, time, container_grade)
-pdf.damage_table(damage_info)
-pdf.container_image(imgpath)
-pdf.output('tuto3.pdf', 'F')
+    pdf = PDF()
+    pdf.set_title(title)
+    pdf.set_author('Jules Verne')
+    pdf.print_chapter(1, 'A RUNAWAY REEF', container_iso, code, time, container_grade)
+    pdf.damage_table(damage_info)
+    pdf.container_image(imgpath)
+    pdf.output('report.pdf', 'F')
+
+if __name__ == "__main__":
+    report()

@@ -2,6 +2,8 @@ import streamlit as st
 import cv2 as cv
 import pandas as pd
 import sqlite3
+from datetime import datetime
+import createpdf 
 
 st.set_page_config(page_title="Dashboard",layout="wide")
 
@@ -17,6 +19,7 @@ res = cur.execute("SELECT * FROM Damages")
 damage = res.fetchall()
 res = cur.execute("SELECT * FROM Inspection")
 time = res.fetchall()
+con.close()
 damagedf = pd.DataFrame(damage, columns =["damage_id", "container_id", "timestamp", "damage_type", "location"])
 timedf = pd.DataFrame(time, columns =["inspect_id", "container_id", "timestamp", "img_path"])
 
@@ -41,9 +44,12 @@ def container_id():
         st.session_state.selected_option = option
     #option = st.select_slider(label="container id", options=df.iloc[:, 2])
     print(option)
-    timestamp = timedf["timestamp"][timedf["container_id"] == option].iloc[0]
-    path = timedf["img_path"][timedf["container_id"] == option].iloc[0]
-    print(path)
+    try:
+        timestamp = timedf["timestamp"][timedf["container_id"] == option].iloc[0]
+        path = timedf["img_path"][timedf["container_id"] == option].iloc[0]
+    except IndexError:
+        print('no data available')
+        path = None
     return option, path
 
 
@@ -64,14 +70,23 @@ def inspect_date(option):
     time = st.selectbox(label="timestamp", options=options, index=None, placeholder="select datetime") # index = options.index(st.session_state.selected_option
     st.write(time)
     return time
-    
 
-#def rating():
+
+def damage_history():
+    print('hi')
+
+
+def export_pdf():
+    if st.button("export report"):
+        createpdf.report()
+        print('pdf exported')
+
 
 def damage_count(option):
     count = df["count"][df["id"] == option].iloc[0]
     st.header("damage count")
     st.write(count)
+
 
 def damage_type(option):
     damages = df[["axis","concave","dentado","perforation"]][df["id"] == option].iloc[0]
@@ -83,19 +98,14 @@ def damage_type(option):
     col5.metric(label=label[2], value = damages[2])
     col6.metric(label=label[3], value = damages[3])
 
-    # make each damage type text clickable and then show crop image when clicked
 
-
-
-# column
 col1, col2  = st.columns(2)
 
 with col1:
     option, path = container_id()
     timestamp = inspect_date(option)
-    #damage_count(option)
-    #damage_type(option)
-    
+    export_pdf()
+
 
 with col2:
     container_image(option, path)
@@ -103,48 +113,7 @@ with col2:
     #st.markdown(f" ### timestamp \n this is {timestamp}")
 
 
-
-
-if st.button("view damage"):
-    img = cv.imread(f"{option}.jpg")
-    print(dm["id"] == option)
-    coor = dm[["location"]][dm["id"] == option]['location']
-    print(coor)
-    image_list = []
-    for box in coor:
-        coor_list = box.split('-')
-        print(f'coordinates:  {coor_list}')
-        print(f'first coordinate: {coor_list[0]}')
-        x = int(coor_list[0])
-        y = int(coor_list[1])
-        w = int(coor_list[2])
-        h = int(coor_list[3])
-        print(x,y,w,h)
-        image = img[y-h:y+h, x-w:x+w]
-        image_list.append(image)
-        print(len(image_list))
-
-    # set channel to BGR for opencv
-    columns = st.columns(len(image_list))
-    print(columns)
-    
-    for i,pic in enumerate(columns):
-        with pic:
-            st.image(image_list[i], channels="BGR", width=True)
-st.write("hello world")
-
-st.markdown("# Damages")
-st.write(f'{option} and {timestamp}')
-
 damage = damagedf[(damagedf['container_id']==option) & (damagedf['timestamp'] == timestamp)]
-
-st.dataframe(damage, use_container_width=True)
-# insert image
-
-# insert table
-
-# insert filter
-
 # interactive image - click to zoom
 st.markdown("# History")
 
