@@ -7,7 +7,7 @@ import createpdf
 
 st.set_page_config(page_title="Dashboard",layout="wide")
 
-st.title("Dashboard")
+st.title("Container Inspection Dashboard")
 st.sidebar.success("Select a page above.")
 
 # load sql database
@@ -33,7 +33,8 @@ def container_id():
     print(options)
     if "selected_option" not in st.session_state:
         st.session_state.selected_option = options[0]  # Default to the first option
-    option = st.selectbox(label="container id", options=options, index = options.index(st.session_state.selected_option))
+    st.header('Container ID')
+    option = st.selectbox(label="Select", options=options, index = options.index(st.session_state.selected_option))
     if st.button("prev"):
         current = options.index(option)
         option = options[current - 1]
@@ -67,6 +68,7 @@ def inspect_date(option):
     print(options)
     if "selected_option" not in st.session_state:
         st.session_state.selected_option = options[0]  # Default to the first option
+    st.header('Date - Time')
     time = st.selectbox(label="timestamp", options=options, index=None, placeholder="select datetime") # index = options.index(st.session_state.selected_option
     st.write(time)
     return time
