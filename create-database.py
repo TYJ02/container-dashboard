@@ -8,7 +8,7 @@ def create_table():
 # when writing in python sqlite3, we omit semicolon
     cur.execute("CREATE TABLE Containers ( container_id VARCHAR(50) PRIMARY KEY, iso TEXT NOT NULL );")
     cur.execute("CREATE TABLE Damages ( damage_id INTEGER PRIMARY KEY AUTOINCREMENT, container_id VARCHAR(50), timestamp TEXT NOT NULL, damage_type VARCHAR(100), location TEXT NOT NULL, FOREIGN KEY (container_id) REFERENCES Containers(container_id));")
-    cur.execute("CREATE TABLE Inspection ( inspect_id INTEGER PRIMARY KEY AUTOINCREMENT, container_id VARCHAR(50), timestamp TEXT NOT NULL, img_path TEXT NOT NULL, FOREIGN KEY (container_id) REFERENCES Containers(container_id));")
+    cur.execute("CREATE TABLE Inspection ( inspect_id INTEGER PRIMARY KEY AUTOINCREMENT, container_id VARCHAR(50), timestamp TEXT NOT NULL, img_path TEXT NOT NULL, grade TEXT NOT NULL, FOREIGN KEY (container_id) REFERENCES Containers(container_id));")
     con.commit()
 '''
 CREATE TABLE Inspection ( inspect_id INTEGER PRIMARY KEY AUTOINCREMENT, container_id VARCHAR(50), timestamp TEXT NOT NULL, img_path TEXT NOT NULL, FOREIGN KEY (container_id) REFERENCES Containers(container_id));
@@ -39,5 +39,5 @@ def add_inspect(data):
 
 if __name__ == "__main__":
     data = [("TCNU6215064", "45G1"), ("TCNU2558065", "45G1")]
-    #create_table()
+    create_table()
     add_id_demo(data)
