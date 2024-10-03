@@ -75,7 +75,7 @@ def inspect_date(option):
 
 def container_grade(option, timestamp):
     try:
-        grade = timedf[['grade']][(timedf['container_id']==option) & (timedf['timestamp'] == timestamp)].iloc[0]
+        grade = timedf[['grade']][(timedf['container_id']==option) & (timedf['timestamp'] == timestamp)].iloc[0,0]
     except IndexError:
         grade = 'None'
     st.header("Container Grade")
